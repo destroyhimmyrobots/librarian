@@ -20,7 +20,7 @@
 / FORK & IPC FUNCTIONS
 / ------------------------------------------------------------------------------
 
-fork:{[sync;cmd] / 'b' flag to hide prompt
+fork_:{[sync;cmd] / 'b' flag to hide prompt
 		if[|/_o=`w32`w64
 			n:4;nice:"/",/:("low";"belownormal";"normal"
 					"abovenormal";"high";"realtime")
@@ -49,7 +49,7 @@ setselfmdict:{
 
 kfork:{[sync;prgm;script]
 		cmd:,/($prgm)," ",($script)," -i ",($p:fs.randport[])
-		if[*r:.[fork;(sync;cmd);:];'*|r]
+		if[*r:.[fork_;(sync;cmd);:];'*|r]
 		if[`sync=sync;:0]
 		h:3:(`;p)
 		h 3:"\\title ",($script)," ",($prgm),"@",(,/($h 4:/:("_h";"_p")),'": "),"of",/" :",'$(_h;_p)
@@ -63,3 +63,5 @@ fork_k:{[sync] kfork[sync;`k;""] }
 fork_e:{[sync] kfork[sync;`e;""] }
 fork_kscript:{[sync;script] kfork[sync;`k;script] }
 fork_escript:{[sync;script] kfork[sync;`e;script] }
+
+fork:{[sync] fork_k[sync] }

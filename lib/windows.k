@@ -15,8 +15,8 @@
 / ----------------------------------------------------------------------- license
 
 .librarian[`console`c]
-.librarian[`spork`s]
 .librarian[`filesystem`fs]
+.librarian[`ascii]
 
 mv:{:[~(-3=4:x$:)&-3=4:y$:;:""];@[`4:;,//$"move /Y ",x," ",y;:]}
 rm:{:[~-3=4:x$:;:""];@[`4:;,//$"del /F /Q ",x;:]}
@@ -29,18 +29,21 @@ fwhere:{*`4:"where \"",($x),"\"" }
 d2lower:{`4:"for /F %a in ('dir ",(,//$x)," /S /L /B') do ren %a %a"}
 
 dnsmirror:{[x;y;z]
-        to:(2#"\\"),($y),fs.DIRSEP,fs.abspath[(x$:)] _dv ":"
-        c.log["Mirroring ",x," -> ",to]
+        to:(2#"\\"),($y),fs[`sep],fs[`abspath][(x$:)] _dv ":"
+        c[`log]["Mirroring ",x," -> ",to]
         :[6=4:z;robocp[x;to];z[x;to]] }
 
 xcp:{:[~(-3=4:x)&(-3=4:y);' "Invalid argument to dnscp."]
-        s.fork[`async;"xcopy \"",x,"\" \"",y,"\" /Y /E /C /I /J /O /F"]}
+        `3:"xcopy \"",x,"\" \"",y,"\" /Y /E /C /I /J /O /F"}
 
 robocp:{
         :[~(-3=4:x)&(-3=4:y);' "Invalid argument to robocp."]
-        s.fork[`async;"robocopy \"",x,"\" \"",y,"\" /E /MT:16 /DCOPY:T"]}
+        `3:"robocopy \"",x,"\" \"",y,"\" /E /MT:16 /DCOPY:T"}
 
+/ need more to remove byte order mark (utf16 endianness)
+/ superuser.com/questions/812438/combine-batch-wmic-ansi-unicode-output-formatting
 fileTimeModifiedStr:{
         :[4=#r:`4:"wmic datafile where Name=",(5:x)," get LastModified | more"
-	    (r 1) _dv/fs.WS;""]}
+	    (r 1) _dv/ascii[`space];""]}
 
+fmts:{:[0=#r:fileTimeModifiedStr x;0N;ktime r]}

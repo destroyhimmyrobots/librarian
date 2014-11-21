@@ -1,5 +1,3 @@
-delkey:{[d;k]}
-hexrand:{h@x _draw#h:,/$(!10),_ci 65+!6}
 dirwrap:{
 	`0:($od:_d),": "
 	."\\d ",n:"d",hexrand[32]
